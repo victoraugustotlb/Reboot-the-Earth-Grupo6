@@ -1,562 +1,414 @@
-# 🌳 Rastro Florestal
+# 🌳 Verdifica
 
-### Infraestrutura Pública Digital para Rastreabilidade de Produtos Florestais
+### Open Digital Infrastructure for Forest Product Traceability
 
-**Projeto desenvolvido para hackathon | MVP experimental | Código aberto**
+**Digital Public Infrastructure (DPI) | Environmental Monitoring | Geospatial Intelligence | Open Source**
 
-## 1. Visão geral
-
-O **Rastro Florestal** é uma proposta de infraestrutura pública digital, aberta e escalável, destinada a apoiar pequenos produtores na rastreabilidade de produtos provenientes de áreas florestais.
-
-A solução busca facilitar o registro de produtos, a organização de evidências de origem e a análise preliminar de possíveis alterações ambientais nas áreas associadas à produção.
-
-O objetivo é conectar pequenos produtores, compradores, organizações e órgãos públicos por meio de informações estruturadas, verificáveis e interoperáveis.
-
-O projeto foi concebido inicialmente para o contexto brasileiro, com possibilidade de adaptação para outros países e biomas da América do Sul.
-
-**Importante:** o MVP não emite certificações oficiais de legalidade ambiental. Seus resultados são experimentais e devem ser interpretados como indicadores de risco e evidências para conferência.
+> **Our mission:** Make environmental traceability more accessible to small-scale forest producers through open technology, satellite-based analysis, and transparent digital evidence.
 
 ---
 
-## 2. Problema
-
-Pequenos produtores enfrentam dificuldades para demonstrar a origem de seus produtos florestais e organizar documentos e evidências exigidos por compradores e instituições.
-
-Entre os principais desafios estão:
-
-- Processos de rastreabilidade fragmentados.
-- Dificuldade de acesso a ferramentas de monitoramento ambiental.
-- Falta de integração entre informações de produção, localização e documentação.
-- Custos e barreiras tecnológicas para pequenos produtores.
-- Dificuldade de compartilhar evidências de maneira padronizada.
-
-O Rastro Florestal propõe reduzir essas barreiras com uma solução digital simples e acessível.
-
-## 3. Solução proposta
-
-O aplicativo permite registrar produtos e tentativas de comprovação de origem, associando fotografias, localização geográfica e informações do produtor.
-
-O backend GeoAI utiliza dados de sensoriamento remoto para identificar possíveis alterações na cobertura vegetal e comparar os resultados com uma área declarada.
-
-O sistema organiza essas informações em um relatório ambiental e devolve uma decisão experimental para orientar a emissão de um token demonstrativo de rastreabilidade.
-
-### Fluxo principal
-
-```text
-PRODUTOR
-   |
-   v
-Registro do produto
-   |
-   v
-Captura de foto + GPS
-   |
-   v
-Consulta ao GeoAI
-   |
-   v
-Analise ambiental por satelite
-   |
-   v
-Comparacao com area declarada
-   |
-   v
-Relatorio ambiental em PDF
-   |
-   +--> Sem alertas: token experimental
-   |
-   +--> Divergencia: revisao necessaria
-   |
-   +--> Dados insuficientes: nao emitir
-```
-
-A decisão experimental não equivale à validação jurídica da atividade ou do produto.
-
----
-
-## 4. Arquitetura técnica
-
-O projeto é dividido em dois componentes principais.
-
-### 4.1 Frontend
-
-**Tecnologia:** React.
-
-Responsável por:
-
-- Interface para pequenos produtores.
-- Registro de produtos.
-- Captura de fotografias.
-- Captura de localização GPS.
-- Armazenamento local dos registros.
-- Consulta ao backend GeoAI.
-- Exibição dos resultados ambientais.
-- Geração de tokens ou QR Codes demonstrativos.
-- Download de relatórios PDF.
-
-O frontend é desenvolvido separadamente pela equipe e deve ser integrado ao backend.
-
-### 4.2 Backend GeoAI
-
-**Tecnologias principais:**
-
-- Python.
-- FastAPI.
-- Google Earth Engine.
-- Sentinel-2 Surface Reflectance Harmonized.
-- Google Dynamic World.
-- ReportLab.
-- Pillow.
-- JSON e GeoJSON.
-
-Responsável por:
-
-- Processar requisições de análise ambiental.
-- Consultar imagens de satélite.
-- Calcular indicadores de vegetação.
-- Identificar possíveis mudanças de cobertura do solo.
-- Comparar mudanças dentro e fora de polígonos declarados.
-- Conferir a compatibilidade geográfica da localização.
-- Consultar permissões fictícias do ambiente demonstrativo.
-- Produzir relatórios estruturados em JSON.
-- Gerar imagens de satélite para visualização.
-- Produzir relatórios PDF.
-- Informar a decisão experimental sobre emissão de token.
-
----
-
-## 5. Monitoramento ambiental por satélite
-
-### 5.1 Sentinel-2
-
-Foi implementada uma integração com o Google Earth Engine utilizando a coleção:
-
-`COPERNICUS/S2_SR_HARMONIZED`
-
-A análise compara composições de imagens obtidas em dois períodos diferentes.
-
-No cenário utilizado durante o desenvolvimento:
-
-- Ano inicial: 2024.
-- Ano final: 2025.
-- Meses analisados: junho a setembro.
-- Localização demonstrativa: latitude -12.5, longitude -54.5.
-- Raio de análise: 1.000 metros.
-
-O algoritmo calcula alterações no NDVI, índice utilizado para avaliar características da vegetação.
-
-Uma queda no NDVI pode indicar mudanças na cobertura vegetal, mas também pode ser influenciada por sazonalidade, agricultura, nuvens e outros fatores.
-
-### 5.2 Google Dynamic World
-
-Foi utilizada a classificação de cobertura do solo do Google Dynamic World.
-
-A análise identifica possíveis transições de áreas classificadas como árvores para outras classes, incluindo:
-
-- Cultivos agrícolas.
-- Gramíneas.
-- Outras coberturas não arbóreas.
-
-Os resultados são estimativas espaciais e não comprovam desmatamento, extração florestal ou ilegalidade.
-
-### 5.3 Comparação com polígonos
-
-O backend aceita geometrias GeoJSON dos tipos `Polygon` e `MultiPolygon`.
-
-Com isso, a análise pode calcular separadamente:
-
-- Mudanças dentro da área declarada.
-- Mudanças fora da área declarada.
-- Área total analisada.
-- Indicadores de alteração arbórea.
-- Indicadores de queda de NDVI.
-
-A validade jurídica do polígono não é verificada automaticamente.
-
----
-
-## 6. Experimentos com o satélite Amazônia-1
-
-Também foi desenvolvido um componente experimental utilizando dados do satélite brasileiro **Amazônia-1**, disponibilizados pelo INPE.
-
-O trabalho incluiu:
-
-- Consulta a catálogo de imagens.
-- Inventário de cenas disponíveis.
-- Processamento experimental de bandas espectrais.
-- Cálculo de NDVI.
-- Comparações temporais.
-- Organização de resultados em arquivos JSON.
-
-Foi utilizado o produto Amazônia-1 WFI, com resolução espacial aproximada de 64 metros.
-
-**Situação atual:** os resultados do Amazônia-1 são pré-processados para uma área demonstrativa. Não existe, no MVP, uma consulta dinâmica equivalente à implementação Sentinel-2 para qualquer propriedade.
-
-Os indicadores do Amazônia-1 devem ser tratados como evidência complementar experimental, com limitações de qualidade e cobertura.
-
----
-
-## 7. Permissões ambientais demonstrativas
-
-Foi criado um conjunto de permissões fictícias armazenadas localmente em JSON.
-
-O cenário principal utiliza:
-
-```text
-Permissao: DEMO-AUT-001
-Produtor: PROD-001
-Orgao emissor: ficticio
-Atividade: supressao vegetal simulada
-Validade: 2024 a 2026
-Limite demonstrativo: 2 hectares
-```
-
-A permissão contém um polígono GeoJSON utilizado na comparação espacial.
-
-**Esses dados não foram obtidos de órgãos ambientais e não possuem validade oficial.**
-
-O limite demonstrativo de 2 hectares não deve ser confundido com a área total do polígono. Também não é possível determinar automaticamente o cumprimento desse limite apenas pela mudança de classe arbórea.
-
----
-
-## 8. Verificação da localização
-
-O backend recebe:
-
-- Latitude.
-- Longitude.
-- Precisão estimada do GPS.
-- Origem da localização.
-
-O sistema compara o ponto informado com o polígono da permissão demonstrativa.
-
-Na análise realizada durante o desenvolvimento, o ponto foi classificado como geograficamente compatível com a área informada.
-
-Resultado de referência:
-
-```text
-Latitude: -12.5
-Longitude: -54.5
-Precisao declarada: 15 metros
-Ponto dentro do poligono: sim
-Distancia aproximada da borda: 398,1 metros
-```
-
-A compatibilidade geográfica não comprova que a fotografia foi capturada naquele local.
-
-No aplicativo, a localização é registrada separadamente da imagem. A fotografia capturada não contém necessariamente coordenadas GPS em seus metadados EXIF.
-
----
-
-## 9. Resultados obtidos durante os testes
-
-Foi executada uma análise experimental utilizando Sentinel-2 e Dynamic World para os períodos de 2024 e 2025.
-
-### Indicadores registrados
-
-| Indicador | Resultado |
-|---|---:|
-| Possível mudança de cobertura arbórea | 1,3504 ha |
-| Mudança arbórea dentro do polígono | 0,2523 ha |
-| Mudança arbórea fora do polígono | 1,0981 ha |
-| Área com queda de NDVI | 1,3733 ha |
-| Transição de árvores para cultivo | 1,0690 ha |
-| Transição de árvores para gramíneas | 0,0873 ha |
-
-O resultado foi classificado como:
-
-`divergencia_para_conferir`
-
-A conclusão é que existem sinais de possível alteração da vegetação fora da área declarada, exigindo revisão.
-
-**Esses valores não comprovam irregularidade ambiental nem atribuem responsabilidade ao produtor.**
-
----
-
-## 10. Relatórios ambientais
-
-Foram implementadas rotas para geração de relatórios ambientais.
-
-### Relatório JSON
-
-Endpoint:
-
-`POST /relatorio/gerar`
-
-Retorna informações como:
-
-- Identificador do relatório.
-- Data de geração.
-- Status da análise.
-- Resumo em linguagem simples.
-- Referências do registro, produto e tentativa.
-- Informações da permissão demonstrativa.
-- Verificação de localização.
-- Indicadores ambientais.
-- Evidências e metodologia.
-
-### Imagens de satélite
-
-Endpoint:
-
-`POST /imagens/satelite`
-
-Gera visualizações de:
-
-1. Antes da mudança.
-2. Depois da mudança.
-3. Possíveis alterações identificadas.
-
-As imagens geradas pelo Earth Engine são evidências visuais experimentais dos períodos analisados.
-
-Os links de visualização podem ser temporários.
-
-### Relatório PDF
-
-Endpoint:
-
-`POST /relatorio/pdf`
-
-Produz um documento contendo:
-
-- Explicação acessível ao produtor.
-- Imagens de antes e depois.
-- Visualização de mudanças.
-- Indicadores ambientais.
-- Informações técnicas.
-- Ressalvas metodológicas.
-
-O PDF incorpora as imagens ao documento, permitindo sua visualização sem depender posteriormente das URLs temporárias.
-
----
-
-## 11. Decisão experimental para emissão de token
-
-O sistema prevê uma resposta padronizada chamada:
-
-`decisao_token`
-
-Exemplo de bloqueio:
-
-```json
-{
-  "pode_emitir": false,
-  "status": "revisao_necessaria",
-  "motivo": "Possivel alteracao ambiental fora da area declarada.",
-  "tipo_token": null
-}
-```
-
-Exemplo de cenário favorável demonstrativo:
-
-```json
-{
-  "pode_emitir": true,
-  "status": "sem_alertas_detectados",
-  "motivo": "Nenhuma divergencia identificada nos criterios analisados.",
-  "tipo_token": "rastro_experimental"
-}
-```
-
-O frontend é responsável pela geração do token ou QR Code.
-
-**A emissão deve ser restrita ao ambiente de demonstração.** O token experimental representa um registro de rastreabilidade acompanhado de análise preliminar, não uma autorização ou certificação ambiental.
-
-A integração completa da decisão deve ser conferida no código final, incluindo os nomes exatos dos status e os critérios de evidência suficiente.
-
----
-
-## 12. Endpoints do backend
-
-| Método | Endpoint | Finalidade |
+## Project Information
+
+| Field | Details |
+|---|---|
+| **Solution Name** | Verdifica |
+| **Team Name** | Group 6 |
+| **Country** | Brazil |
+| **Development Stage** | Hackathon Prototype / Minimum Viable Product (MVP) |
+| **Project Category** | Digital Public Infrastructure (DPI) |
+| **Target Audience** | Small-scale forest producers, cooperatives, buyers, and public institutions |
+| **Main Technologies** | React, Python, FastAPI, Google Earth Engine, Sentinel-2 |
+| **Development Approach** | Open-source and interoperable architecture |
+
+## Meet Our Team — Group 6
+
+Verdifica was developed by five team members working together to promote environmental sustainability, digital inclusion, and more transparent supply chains.
+
+| Team Member | Email | LinkedIn |
 |---|---|---|
-| GET | `/` | Informações da API |
-| GET | `/saude` | Verificação de disponibilidade |
-| GET | `/amazonia1/resumo` | Resultados experimentais Amazônia-1 |
-| GET | `/amazonia1/inventario` | Inventário de cenas Amazônia-1 |
-| GET | `/permissoes/demo` | Permissões fictícias |
-| GET | `/relatorio/demo` | Relatório demonstrativo |
-| POST | `/sentinel/analisar` | Análise Sentinel-2 |
-| POST | `/relatorio/gerar` | Relatório ambiental JSON |
-| POST | `/imagens/satelite` | Visualizações de satélite |
-| POST | `/relatorio/pdf` | Relatório PDF |
-
-Documentação interativa disponível em:
-
-`http://localhost:8000/docs`
+| **Giovanna Franco de Carvalho** | giovanna.francoc@outlook.com | Giovanna Franco — URL not provided |
+| **Victor Augusto Toledo Lúcio Borghi** | victoraugustoborghi082@gmail.com | [LinkedIn](https://www.linkedin.com/in/victorborghi) |
+| **Thales Prado Rocha dos Santos** | thalesprocha44@gmail.com | Thales Prado — URL not provided |
+| **Rafael Hoki Kuntz** | rafael.hoki@gmail.com | [LinkedIn](https://www.linkedin.com/in/rafael-hoki-05a15043b/) |
+| **Thiago Silva de Almeida** | thiagoalmeida0250@gmail.com | Not provided |
 
 ---
 
-## 13. Como executar o backend
+## Prototype Access
 
-### Pré-requisitos
+**Prototype Link:** [INSERT GITHUB REPOSITORY URL]
 
-- Python.
-- Dependências do projeto.
-- Acesso configurado ao Google Earth Engine.
-- Projeto Google Cloud habilitado para Earth Engine.
+**Important — Local Execution:** Verdifica currently runs in a local development environment and is not publicly hosted. The repository provides access to the source code and project documentation rather than a live application. Reviewers must download the project, install its dependencies, and run the frontend and backend locally.
 
-### Instalação
+Live satellite analysis requires Google Earth Engine authentication and an authorized Google Cloud project.
 
-A partir da pasta `backend/`:
+---
+
+## 1. The Problem
+
+Small-scale forest producers often face significant challenges when trying to demonstrate the origin of their products and provide environmental information to buyers, companies, ports, and public institutions.
+
+Existing traceability and environmental monitoring systems can be expensive, fragmented, technically complex, and difficult to access.
+
+These barriers can limit opportunities for producers to participate in responsible supply chains, even when they are willing to provide information about their activities.
+
+Meanwhile, institutions and companies need reliable, standardized, and transparent environmental information to support their verification processes.
+
+**The challenge is to make environmental traceability accessible, transparent, and interoperable without creating additional technological barriers for small producers.**
+
+## 2. Our Solution
+
+**Verdifica** is an open-source digital platform designed to support forest product traceability through field data collection, satellite-based environmental screening, and standardized technical reporting.
+
+The solution allows producers to register products, capture photographs, collect GPS coordinates, and associate their records with declared production areas.
+
+Its backend uses satellite imagery and geospatial analysis to identify potential changes in vegetation and land cover over time.
+
+The system consolidates the results into environmental reports and supports experimental traceability decisions.
+
+In favorable demonstration scenarios, Verdifica can generate an experimental traceability token that links a product record to supporting information.
+
+**Verdifica does not issue official environmental certifications, validate legal permits, or independently prove that a product was legally sourced.** It provides preliminary technical evidence to support further verification.
+
+## 3. How Verdifica Works
+
+Verdifica follows four main stages:
+
+### Stage 1 — Field Data Collection
+
+The producer registers a forest product through the application.
+
+The registration workflow can include:
+
+- Product type and description.
+- Product quantity.
+- Product photograph.
+- GPS coordinates.
+- Declared production location.
+- Registration information.
+
+The objective is to organize the product's declared origin and supporting information in a digital record.
+
+### Stage 2 — Satellite and Geospatial Analysis
+
+The backend analyzes satellite imagery and geographic data to identify potential vegetation and land-cover changes.
+
+The analysis combines:
+
+- **Sentinel-2:** Satellite imagery for multitemporal monitoring.
+- **Google Dynamic World:** Machine-learning-based land-cover classification.
+- **NDVI:** Vegetation condition indicators.
+- **GeoJSON:** Geographic boundaries and spatial comparisons.
+- **Amazônia-1:** Complementary Brazilian satellite research.
+
+The system can compare environmental conditions across different periods and assess changes inside and outside a declared geographic polygon.
+
+Satellite indicators support environmental screening but cannot independently establish illegal deforestation or legal compliance.
+
+### Stage 3 — Environmental Assessment and Evidence
+
+The platform processes the analysis results and organizes technical evidence.
+
+Depending on the available information, the assessment may identify:
+
+- No divergence detected within the analyzed scenario.
+- Potential environmental divergence requiring further review.
+- Insufficient evidence for a reliable assessment.
+
+Supporting evidence may include satellite images, vegetation indicators, land-cover classifications, maps, JSON responses, and PDF reports.
+
+### Stage 4 — Traceability and Information Sharing
+
+When a demonstration scenario meets the configured conditions, the application can generate an experimental traceability token.
+
+The long-term objective is to enable authorized stakeholders to access relevant evidence associated with a product registration.
+
+Future integrations could support information exchange with cooperatives, companies, ports, and public institutions.
+
+**The experimental token is not an official certificate or a guarantee of product authenticity, legal origin, or environmental compliance.**
+
+## 4. System Architecture
+
+```text
+                  SMALL-SCALE PRODUCER
+                           |
+                           v
+                  REACT APPLICATION
+                Product Registration
+                Photo Capture + GPS
+                           |
+                           v
+                      FASTAPI
+                    Python Backend
+                           |
+             +-------------+-------------+
+             |                           |
+             v                           v
+      GEOSPATIAL ANALYSIS          IMAGE VALIDATION
+      Google Earth Engine          File and Resolution
+             |                           |
+             v                           v
+      Sentinel-2 / NDVI           Demonstration Mode
+      Dynamic World               No Visual AI Verification
+             |                           |
+             +-------------+-------------+
+                           |
+                           v
+                 ENVIRONMENTAL REPORT
+                  JSON + Maps + PDF
+                           |
+                           v
+                  SCREENING DECISION
+                           |
+               +-----------+-----------+
+               |                       |
+               v                       v
+        FAVORABLE DEMO            POTENTIAL ALERT
+           SCENARIO               OR INSUFFICIENT
+               |                     EVIDENCE
+               v                       |
+       EXPERIMENTAL TOKEN              v
+                                FURTHER REVIEW
+```
+
+The architecture is modular and designed to support future integrations with public digital services.
+
+## 5. Technology Stack
+
+| Component | Technology | Purpose |
+|---|---|---|
+| Frontend | React | Producer interface and product registration |
+| Backend | Python / FastAPI | API services and environmental processing |
+| Satellite Processing | Google Earth Engine | Geospatial analysis |
+| Satellite Imagery | Sentinel-2 | Vegetation and land-cover monitoring |
+| Land-Cover Classification | Google Dynamic World | Land-cover change indicators |
+| Vegetation Analysis | NDVI | Vegetation condition comparison |
+| Additional Satellite Research | Amazônia-1 / INPE | Complementary Earth observation research |
+| Image Validation | Pillow | Image file and resolution validation |
+| Report Generation | ReportLab | Environmental PDF reports |
+| Geographic Data | GeoJSON | Declared production area boundaries |
+| Local Storage | IndexedDB | Frontend registration records |
+| Data Exchange | REST APIs / JSON | Interoperability |
+
+### Artificial Intelligence and Environmental Monitoring
+
+Verdifica uses satellite-derived environmental information, including machine-learning-based land-cover classifications from Google Dynamic World.
+
+The prototype compares satellite observations across different periods to identify potential changes in vegetation and land cover.
+
+The photograph endpoint currently operates in demonstration mode. It validates uploaded image files but does not perform AI-based product recognition, image authenticity verification, or GPS verification.
+
+These capabilities are potential future developments.
+
+## 6. Digital Public Infrastructure (DPI)
+
+Verdifica is designed as a potential reusable component of **Digital Public Infrastructure (DPI)**.
+
+Rather than creating an isolated verification platform, the project explores how open digital components can support environmental traceability across different organizations and regions.
+
+The architecture emphasizes:
+
+| Principle | Verdifica's Approach |
+|---|---|
+| **Interoperability** | Standardized REST APIs, JSON responses, and GeoJSON data |
+| **Openness** | Open-source development and reusable components |
+| **Digital Inclusion** | Accessible workflows designed for small-scale producers |
+| **Transparency** | Documented environmental indicators and technical evidence |
+| **Scalability** | Potential adaptation to other biomes and countries |
+| **Governance** | Future integration with authorized institutions and public registries |
+| **Trust** | Evidence-based assessments and planned auditability mechanisms |
+
+### Regional Scalability
+
+Although Verdifica was initially developed with the Brazilian forest context in mind, its modular architecture is intended to support adaptation to other ecosystems.
+
+Future implementations could integrate different satellite sources, environmental databases, regulatory requirements, and institutional systems.
+
+This creates opportunities for expansion across South America.
+
+**Verdifica is currently a DPI-oriented prototype, not an officially deployed government infrastructure.**
+
+## 7. Data Security and Privacy
+
+**Protecting producer information is a fundamental design priority.**
+
+Verdifica may process product records, photographs, GPS coordinates, geographic boundaries, and environmental reports.
+
+Some of this information may be personal, commercially sensitive, or capable of revealing a producer's location and activities.
+
+The MVP supports local frontend storage and environment-based configuration for backend credentials.
+
+### Security Measures and Planned Improvements
+
+| Security Area | Approach |
+|---|---|
+| **Data Minimization** | Collect only information necessary for product registration and environmental analysis |
+| **Geolocation Privacy** | Restrict exposure of precise producer coordinates |
+| **Authentication** | Implement secure user accounts and role-based access control |
+| **Encryption** | Use HTTPS and encryption for sensitive stored data in production |
+| **API Security** | Validate inputs, restrict file uploads, and introduce rate limiting |
+| **Token Integrity** | Develop cryptographically signed records and secure token verification |
+| **Auditability** | Record important changes, access events, and verification decisions |
+| **Regulatory Compliance** | Align future deployments with Brazil's LGPD and applicable data protection laws |
+
+### Current Security Limitations
+
+Verdifica is a hackathon MVP and has not undergone an independent security audit.
+
+Production-grade authentication, authorization, encryption at rest, secure multi-user data storage, and formal privacy governance remain implementation priorities.
+
+Sensitive credentials must never be committed to public repositories.
+
+Precise producer locations and personal records should not be publicly exposed without appropriate authorization and safeguards.
+
+## 8. Current MVP Features
+
+The prototype includes:
+
+- Product registration and photograph capture workflows.
+- GPS collection.
+- A FastAPI backend with documented endpoints.
+- Sentinel-2 satellite analysis.
+- Dynamic World land-cover classification.
+- NDVI-based vegetation indicators.
+- Geographic comparison of changes inside and outside declared polygons.
+- Experimental Amazônia-1 analysis.
+- Demonstration environmental permission records.
+- Satellite image visualizations.
+- Structured JSON environmental reports.
+- PDF report generation.
+- Image upload and basic file validation.
+- Experimental traceability decision logic.
+
+Some environmental permissions and demonstration scenarios use fictional or simulated data.
+
+Full frontend-to-backend integration requires final end-to-end validation.
+
+## 9. Running Verdifica Locally
+
+### Prerequisites
+
+To run the project locally, you will need:
+
+- Python 3.
+- Node.js and npm.
+- A Google Earth Engine account for live satellite processing.
+- An authorized Google Cloud project.
+- The project's backend and frontend dependencies.
+
+### Backend Setup
+
+Open a terminal and navigate to the backend directory:
+
+```bash
+cd backend
+```
+
+Create and activate a virtual environment:
 
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
+```
+
+Install the required dependencies:
+
+```bash
 pip install -r requirements.txt
 ```
 
-Para autenticar o Earth Engine, quando necessário:
+Configure the environment variables using the repository's `.env.example` file, if provided.
+
+Authenticate with Google Earth Engine:
 
 ```bash
 earthengine authenticate
 ```
 
-Configure a variável de ambiente com um projeto Google Cloud ao qual você tenha acesso:
-
-```bash
-export EE_PROJECT="SEU_PROJETO_GOOGLE_CLOUD"
-```
-
-Inicie a API:
+Start the FastAPI server:
 
 ```bash
 python -m uvicorn api.main:app --reload
 ```
 
-Acesse:
+The backend should be available at:
+
+`http://127.0.0.1:8000`
+
+Interactive API documentation:
 
 `http://127.0.0.1:8000/docs`
 
-As credenciais de autenticação não devem ser adicionadas ao GitHub.
+### Frontend Setup
+
+Navigate to the frontend directory and install the dependencies:
+
+```bash
+npm install
+```
+
+Start the React development server using the script defined in the frontend's `package.json`.
+
+For a Vite-based React application:
+
+```bash
+npm run dev
+```
+
+Configure the frontend to communicate with the locally running FastAPI backend.
+
+The exact frontend directory and startup command should be checked against the final repository structure.
+
+### Important Notes
+
+- Verdifica currently runs locally.
+- Live satellite processing requires Google Earth Engine authentication.
+- Demonstration scenarios may use simulated data.
+- The prototype is not an official environmental verification service.
+- Real producer data should not be used without appropriate privacy and security safeguards.
+
+## 10. Expected Impact
+
+Verdifica aims to reduce technological barriers to environmental traceability and improve access to environmental information.
+
+Potential long-term benefits include:
+
+- Greater access to traceability tools for small-scale producers.
+- Better organization of product provenance evidence.
+- Increased transparency across forest product supply chains.
+- Easier exchange of standardized information between institutions.
+- Reusable digital infrastructure for environmental services.
+- Opportunities for adaptation across South American countries and biomes.
+
+The project seeks to support a more inclusive digital ecosystem in which environmental information can be shared responsibly and transparently.
+
+## 11. Future Development
+
+The next development priorities include:
+
+1. Completing and validating frontend-backend integration.
+2. Implementing production-grade authentication and authorization.
+3. Strengthening data privacy, encryption, and security monitoring.
+4. Connecting official environmental and land-use databases.
+5. Improving photograph authenticity and evidence verification.
+6. Implementing secure and verifiable traceability tokens.
+7. Expanding offline-first capabilities.
+8. Testing the platform with real producers and institutional partners.
+9. Exploring deployment across different biomes and countries.
+
+## 12. Our Vision
+
+We believe environmental traceability should not be limited to organizations with extensive financial resources or specialized technical infrastructure.
+
+Verdifica explores how open-source technology, satellite-derived environmental information, and interoperable digital services can help make traceability more accessible to small-scale forest producers.
+
+Our long-term ambition is to contribute reusable components to a trustworthy, inclusive, and scalable Digital Public Infrastructure ecosystem.
 
 ---
 
-## 14. Estratégia de demonstração do hackathon
+### 🌳 Verdifica — Group 6
 
-A apresentação utiliza um fluxo híbrido.
+**Connecting forest producers, environmental evidence, and digital trust.**
 
-### Funcionalidades reais
-
-- Captura de foto pelo aplicativo.
-- Captura de GPS do dispositivo.
-- Registro local de informações.
-- Backend FastAPI.
-- Código de análise ambiental com Earth Engine.
-- Geração de relatórios.
-- Estrutura de decisão experimental.
-
-### Funcionalidades demonstrativas
-
-- Permissões ambientais fictícias.
-- Propriedade de referência na região amazônica.
-- Cenário de divergência ambiental.
-- Cenário favorável simulado.
-- Emissão de token demonstrativo.
-- Imagens ilustrativas dos PDFs preparados para o pitch.
-
-### Separação entre dados reais e fictícios
-
-Durante a apresentação, o celular pode estar em São Paulo, enquanto a propriedade de demonstração está localizada em outra região.
-
-O GPS real da captura **não deve ser apresentado como localização da propriedade fictícia**.
-
-O aplicativo deve manter separadas:
-
-- Localização real da captura.
-- Localização demonstrativa da área analisada.
-- Origem das evidências.
-- Identificação do cenário simulado.
-
----
-
-## 15. Testes realizados
-
-Durante o desenvolvimento, foram verificados:
-
-- Inicialização da API FastAPI.
-- Conexão com o Google Earth Engine.
-- Consulta a imagens Sentinel-2.
-- Análise ambiental com polígono.
-- Cálculo de mudanças dentro e fora da área.
-- Consulta à base fictícia de permissões.
-- Geração do relatório JSON.
-- Geração e abertura de imagens do Earth Engine.
-- Geração e abertura de PDF.
-- Regras experimentais de decisão do token.
-
-Também foram relatados testes automatizados utilizando respostas simuladas do Earth Engine.
-
-**Limitações:** não foi demonstrado um teste completo ponta a ponta do aplicativo React com o backend em produção. Os testes simulados não substituem uma validação operacional completa do serviço real.
-
----
-
-## 16. O que ainda falta implementar
-
-### Integração
-
-- Conectar os registros do React aos endpoints FastAPI.
-- Associar corretamente foto, GPS, registro, produto e tentativa.
-- Exibir os resultados ambientais no aplicativo.
-- Disponibilizar o PDF para download.
-- Gerar e visualizar o token demonstrativo.
-
-### Evolução técnica
-
-- Integrar bases oficiais de permissões ambientais.
-- Validar geometrias e documentação de propriedades.
-- Melhorar os filtros de qualidade das imagens.
-- Incorporar métricas de confiança e incerteza.
-- Tratar períodos sem imagens utilizáveis.
-- Armazenar evidências e referências de forma persistente.
-- Implementar autenticação e controle de acesso.
-- Proteger os endpoints contra uso indevido.
-- Adicionar testes automatizados de integração.
-- Definir critérios técnicos para resultados inconclusivos.
-- Validar o modelo com especialistas ambientais.
-
-### Evolução da infraestrutura pública digital
-
-- Documentar contratos de API.
-- Adotar formatos interoperáveis.
-- Estabelecer versionamento de métodos e dados.
-- Criar mecanismos de auditoria.
-- Permitir implantação por diferentes organizações.
-- Estudar integração com plataformas públicas.
-- Adaptar a solução a outros biomas e países.
-
----
-
-## 17. Princípios do projeto
-
-**Acessibilidade:** oferecer uma experiência compreensível para pequenos produtores.
-
-**Transparência:** explicar como os resultados foram obtidos e quais são suas limitações.
-
-**Interoperabilidade:** utilizar padrões abertos e interfaces documentadas.
-
-**Escalabilidade:** permitir adaptação a diferentes regiões e instituições.
-
-**Responsabilidade:** não confundir indicadores experimentais com comprovação de legalidade.
-
-**Código aberto:** favorecer colaboração, auditoria e evolução coletiva.
-
----
-
-## 18. Status do projeto
-
-**Estado atual:** MVP experimental desenvolvido para hackathon.
-
-O núcleo geoespacial foi implementado e testado em cenários de referência. A geração de relatórios JSON, imagens e PDF foi demonstrada. A integração final com o aplicativo e a emissão de tokens demonstrativos fazem parte da etapa de consolidação do MVP.
-
-O projeto não deve ser utilizado para certificação ambiental oficial ou decisões regulatórias sem validação técnica, jurídica e institucional adicional.
-
----
-
-## 19. Visão de futuro
-
-O Rastro Florestal pretende evoluir para uma infraestrutura digital aberta que facilite o registro de origem e a organização de evidências ambientais de produtos florestais.
-
-A proposta de longo prazo é oferecer componentes reutilizáveis para pequenos produtores, cooperativas, compradores e instituições públicas, com possibilidade de expansão para diferentes biomas e países da América do Sul.
-
-**Rastro Florestal — tecnologia aberta para aproximar pequenos produtores da rastreabilidade digital e do monitoramento ambiental.**
+*Developed in Brazil. Designed for inclusion. Built with the ambition to scale across South America.*
