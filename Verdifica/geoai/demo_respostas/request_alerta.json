@@ -1,0 +1,13 @@
+{
+  "permissao_id": "DEMO-AUT-001",
+  "latitude": -12.5,
+  "longitude": -54.5,
+  "precisao_metros": 15,
+  "origem_localizacao": "device",
+  "raio_metros": 1000,
+  "ano_inicial": 2024,
+  "ano_final": 2025,
+  "registro_id": "REG-001",
+  "produto_id": "PRODUTO-001",
+  "tentativa_id": "TENT-001"
+}

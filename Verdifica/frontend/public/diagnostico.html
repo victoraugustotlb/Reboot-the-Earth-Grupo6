@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="pt-BR">
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Diagnóstico · Rastro Florestal</title>
+<style>body{background:#f7f9f6;color:#173c29;font:16px/1.6 system-ui;max-width:700px;margin:30px auto;padding:24px}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #cddbc8;padding:20px}a{color:#075331}</style>
+<h1>Diagnóstico do aplicativo local</h1>
+<p>Esta página verifica o frontend e o proxy da API, sem solicitar acesso à câmera ou ao GPS.</p>
+<pre id="result">Verificando…</pre><p><a href="/">Abrir o aplicativo</a></p>
+<script>
+(async function () {
+  const lines = ['Endereço: ' + location.origin, 'Contexto seguro: ' + (window.isSecureContext ? 'sim' : 'não'), 'Câmera disponível: ' + !!navigator.mediaDevices?.getUserMedia, 'GPS disponível: ' + !!navigator.geolocation];
+  try {
+    const response = await fetch('/api/health', { cache: 'no-store' });
+    lines.push('API: HTTP ' + response.status);
+    const health = await response.json();
+    lines.push('Estado: ' + health.status, 'Banco: ' + health.database, 'Armazenamento: ' + health.storage);
+  } catch (error) { lines.push('Falha ao consultar a API. Confira npm run dev e a porta 3001.'); }
+  document.getElementById('result').textContent = lines.join('\n');
+})();
+</script>
+</html>

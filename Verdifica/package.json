@@ -1,0 +1,36 @@
+{
+  "name": "reboot-the-earth",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "concurrently -k \"npm:dev:api\" \"npm:dev:web\" \"npm:dev:geoai\"",
+    "start": "node --env-file=.env server/index.js",
+    "test": "npm run test:api && npm run test:frontend && npm run test:geoai",
+    "dev:geoai": "node --env-file=.env scripts/geoai.mjs serve",
+    "setup:geoai": "node scripts/geoai.mjs setup",
+    "test:geoai": "node scripts/geoai.mjs test",
+    "format": "prettier --write server shared scripts tests frontend/src frontend/vite.config.js package.json frontend/package.json .prettierrc.json",
+    "format:check": "prettier --check server shared scripts tests frontend/src frontend/vite.config.js package.json frontend/package.json .prettierrc.json",
+    "dev:api": "node --watch --env-file=.env server/index.js",
+    "dev:web": "npm --workspace frontend run dev",
+    "build": "npm --workspace frontend run build",
+    "preview:web": "npm --workspace frontend run preview",
+    "test:api": "node --test tests/*.test.js",
+    "test:frontend": "npm --workspace frontend test"
+  },
+  "dependencies": {
+    "express": "^5.1.0",
+    "express-rate-limit": "^8.2.0",
+    "multer": "^2.0.2",
+    "qrcode": "^1.5.4"
+  },
+  "devDependencies": {
+    "prettier": "^3.9.10",
+    "concurrently": "^9.2.1"
+  },
+  "description": "API de rastreabilidade de extração de madeira com Express e SQLite",
+  "workspaces": [
+    "frontend"
+  ]
+}

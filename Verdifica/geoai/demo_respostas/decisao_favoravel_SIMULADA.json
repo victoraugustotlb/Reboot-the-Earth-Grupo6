@@ -1,0 +1,11 @@
+{
+  "ambiente": "DEMONSTRACAO",
+  "status": "sem_divergencia_detectada_nesta_analise",
+  "decisao_token": {
+    "pode_emitir": true,
+    "status": "sem_alertas_detectados",
+    "motivo": "Sem divergencias nos criterios experimentais avaliados; nao comprova legalidade.",
+    "tipo_token": "rastro_experimental"
+  },
+  "aviso": "SIMULACAO: nao obtido por consulta real ao Earth Engine"
+}

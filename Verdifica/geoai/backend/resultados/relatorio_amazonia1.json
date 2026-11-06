@@ -1,0 +1,85 @@
+{
+  "status": "experimental",
+  "fonte": "Amazonia-1 WFI L4 SR",
+  "periodo_inicial": [
+    "2025-06-01",
+    "2025-06-30"
+  ],
+  "periodo_final": [
+    "2025-09-01",
+    "2025-09-30"
+  ],
+  "pixels_comparaveis": 1225,
+  "cobertura_comparavel_percentual": 100.0,
+  "pixels_com_alteracao": 0,
+  "possivel_alteracao_ha": 0.0,
+  "cenas_iniciais": [
+    {
+      "data": "2025-06-01",
+      "cobertura_valida": 1.0
+    },
+    {
+      "data": "2025-06-06",
+      "cobertura_valida": 1.0
+    },
+    {
+      "data": "2025-06-08",
+      "cobertura_valida": 1.0
+    },
+    {
+      "data": "2025-06-11",
+      "cobertura_valida": 1.0
+    },
+    {
+      "data": "2025-06-16",
+      "cobertura_valida": 1.0
+    },
+    {
+      "data": "2025-06-18",
+      "cobertura_valida": 1.0
+    },
+    {
+      "data": "2025-06-21",
+      "cobertura_valida": 1.0
+    },
+    {
+      "data": "2025-06-28",
+      "cobertura_valida": 1.0
+    }
+  ],
+  "cenas_finais": [
+    {
+      "data": "2025-09-04",
+      "cobertura_valida": 1.0
+    },
+    {
+      "data": "2025-09-06",
+      "cobertura_valida": 1.0
+    },
+    {
+      "data": "2025-09-09",
+      "cobertura_valida": 1.0
+    },
+    {
+      "data": "2025-09-11",
+      "cobertura_valida": 1.0
+    },
+    {
+      "data": "2025-09-19",
+      "cobertura_valida": 0.0
+    },
+    {
+      "data": "2025-09-21",
+      "cobertura_valida": 0.3845
+    },
+    {
+      "data": "2025-09-24",
+      "cobertura_valida": 1.0
+    },
+    {
+      "data": "2025-09-29",
+      "cobertura_valida": 1.0
+    }
+  ],
+  "nota": "Mudanca espectral entre compositos; nao comprova corte de madeira ou ilegalidade. CMASK e limiares exigem validacao."
+}

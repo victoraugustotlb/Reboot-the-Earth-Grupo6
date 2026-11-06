@@ -1,0 +1,10 @@
+{
+  "ambiente": "DEMONSTRACAO",
+  "status": "divergencia_para_conferir",
+  "decisao_token": {
+    "pode_emitir": false,
+    "status": "revisao_necessaria",
+    "motivo": "Possivel divergencia ambiental ou geografica.",
+    "tipo_token": null
+  }
+}

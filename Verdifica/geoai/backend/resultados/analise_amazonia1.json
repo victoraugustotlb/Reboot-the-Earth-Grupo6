@@ -1,0 +1,23 @@
+{
+  "satellite": "AMAZONIA-1",
+  "sensor": "WFI",
+  "collection": "AMZ1-WFI-L4-SR-1",
+  "scenes": {
+    "2024": "AMAZONIA_1_WFI_20240929_036_017_L4",
+    "2025": "AMAZONIA_1_WFI_20250929_036_017_L4"
+  },
+  "bbox": [
+    -54.51,
+    -12.51,
+    -54.49,
+    -12.49
+  ],
+  "ndvi_before": 0.2833338677883148,
+  "ndvi_after": 0.5105679035186768,
+  "threshold": -0.2,
+  "analyzed_hectares": 501.76,
+  "changed_hectares": 0.0,
+  "status": "experimental",
+  "cloud_mask_applied": false,
+  "note": "Queda de NDVI nao comprova desmatamento ou ilegalidade."
+}
