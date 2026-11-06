@@ -1,0 +1,43 @@
+{
+  "ambiente": "DEMONSTRACAO",
+  "fonte": "BASE FICTICIA - NAO OFICIAL",
+  "permissoes": [
+    {
+      "id": "DEMO-AUT-001",
+      "produtor_id": "PROD-001",
+      "orgao_emissor": "FICTIONAL ENVIRONMENTAL AUTHORITY",
+      "status": "simulada_ativa",
+      "atividade": "supressao_vegetal_simulada",
+      "validade_inicio": "2024-01-01",
+      "validade_fim": "2026-12-31",
+      "area_maxima_ha": 2.0,
+      "area_autorizada": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -54.5037,
+              -12.5036
+            ],
+            [
+              -54.4963,
+              -12.5036
+            ],
+            [
+              -54.4963,
+              -12.4964
+            ],
+            [
+              -54.5037,
+              -12.4964
+            ],
+            [
+              -54.5037,
+              -12.5036
+            ]
+          ]
+        ]
+      }
+    }
+  ]
+}
