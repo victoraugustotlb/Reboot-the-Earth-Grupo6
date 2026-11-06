@@ -1,0 +1,8 @@
+fastapi
+uvicorn
+pydantic>=2
+earthengine-api
+reportlab
+pillow
+requests
+httpx

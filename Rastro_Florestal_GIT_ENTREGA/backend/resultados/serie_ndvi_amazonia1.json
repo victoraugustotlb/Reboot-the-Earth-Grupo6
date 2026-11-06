@@ -1,0 +1,74 @@
+[
+  {
+    "date": "2025-06-01",
+    "scene_id": "AMAZONIA_1_WFI_20250601_036_017_L4",
+    "ndvi_mean": 0.5349592057066392,
+    "cloud_mask_applied": false
+  },
+  {
+    "date": "2025-06-11",
+    "scene_id": "AMAZONIA_1_WFI_20250611_036_017_L4",
+    "ndvi_mean": 0.5229140020984266,
+    "cloud_mask_applied": false
+  },
+  {
+    "date": "2025-06-21",
+    "scene_id": "AMAZONIA_1_WFI_20250621_036_017_L4",
+    "ndvi_mean": 0.49428930579584773,
+    "cloud_mask_applied": false
+  },
+  {
+    "date": "2025-07-01",
+    "scene_id": "AMAZONIA_1_WFI_20250701_036_017_L4",
+    "ndvi_mean": 0.4798114077030169,
+    "cloud_mask_applied": false
+  },
+  {
+    "date": "2025-07-11",
+    "scene_id": "AMAZONIA_1_WFI_20250711_036_017_L4",
+    "ndvi_mean": 0.507039106428417,
+    "cloud_mask_applied": false
+  },
+  {
+    "date": "2025-07-21",
+    "scene_id": "AMAZONIA_1_WFI_20250721_036_017_L4",
+    "ndvi_mean": 0.5107396531682526,
+    "cloud_mask_applied": false
+  },
+  {
+    "date": "2025-07-31",
+    "scene_id": "AMAZONIA_1_WFI_20250731_036_017_L4",
+    "ndvi_mean": 0.11723607469182526,
+    "cloud_mask_applied": false
+  },
+  {
+    "date": "2025-08-12",
+    "scene_id": "AMAZONIA_1_WFI_20250812_037_017_L4",
+    "ndvi_mean": 0.506641638732699,
+    "cloud_mask_applied": false
+  },
+  {
+    "date": "2025-08-22",
+    "scene_id": "AMAZONIA_1_WFI_20250822_037_017_L4",
+    "ndvi_mean": 0.4093316946062662,
+    "cloud_mask_applied": false
+  },
+  {
+    "date": "2025-09-04",
+    "scene_id": "AMAZONIA_1_WFI_20250904_036_017_L4",
+    "ndvi_mean": 0.47573113358969504,
+    "cloud_mask_applied": false
+  },
+  {
+    "date": "2025-09-14",
+    "scene_id": "AMAZONIA_1_WFI_20250914_036_017_L4",
+    "ndvi_mean": 0.43428715372580556,
+    "cloud_mask_applied": false
+  },
+  {
+    "date": "2025-09-24",
+    "scene_id": "AMAZONIA_1_WFI_20250924_036_017_L4",
+    "ndvi_mean": 0.40116032267111806,
+    "cloud_mask_applied": false
+  }
+]
