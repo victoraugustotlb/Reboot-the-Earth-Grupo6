@@ -21,8 +21,8 @@ The prototype distinguishes simulated reference data from live satellite analysi
 Clone the repository, open its root folder and run:
 
 ```bash
-git clone https://github.com/victoraugustotlb/Reboot-the-Earth-Grupo6.git
-cd Reboot-the-Earth-Grupo6
+git clone https://github.com/victoraugustotlb/Reboot-the-Earth-Verdifica.git
+cd Reboot-the-Earth-Verdifica
 cp .env.example .env
 npm install
 npm run setup:geoai
@@ -103,3 +103,4 @@ Giovanna Franco de Carvalho · Victor Augusto Toledo Lúcio Borghi · Thales Pra
 ---
 
 *We built Verdifica to make environmental evidence easier to organize, share and review — while keeping human verification central.*
+
