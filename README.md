@@ -98,7 +98,7 @@ Our approach relates to **SDG 8** (Decent Work and Economic Growth), **SDG 12** 
 
 Giovanna Franco de Carvalho · Victor Augusto Toledo Lúcio Borghi · Thales Prado Rocha dos Santos · Rafael Hoki Kuntz · Thiago Silva de Almeida
 
-**Project report:** [Verdifica Technical Project Report](./Verdifica_LinkedIn_Final_Report.pdf) *(add the PDF to the repository at this path before using this link).*
+**Project report:** [Verdifica Technical Project Report](./Verdifica_LinkedIn_Final_Report.pdf) 
 
 ---
 
